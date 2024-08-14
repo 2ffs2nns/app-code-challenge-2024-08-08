@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: pacman
-        image: docker.io/2ffs2nns/pacman:latest
+        image: docker.io/2ffs2nns/pacman:bdb4281
         ports:
         - containerPort: 80
 ---
