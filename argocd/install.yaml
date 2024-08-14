@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pacman
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/2ffs2nns/app-code-challenge-2024-08-08
+    path: manifests
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: pacman
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PrunePropagationPolicy=background
+
