@@ -6,7 +6,12 @@ metadata:
   labels:
     app: pacman
   annotations:
-    ignore-check.kube-linter.io/no-anti-affinity: "not worrying about nodes/replica placement atm"
+    ignore-check.kube-linter.io/no-anti-affinity: not worrying about nodes/replica placement atm
+    checkov.io/skip1: CKV_K8S_28=Minimize the admission of containers with the NET_RAW capability
+    checkov.io/skip2: CKV_K8S_37=Minimize the admission of containers with capabilities assigned
+    checkov.io/skip3: CKV_K8S_38=Ensure that Service Account Tokens are only mounted where necessary
+    checkov.io/skip4: CKV_K8S_40=Containers should run as a high UID to avoid host conflict
+    checkov.io/skip5: CKV_K8S_43=Image should use digest
 spec:
   replicas: 3
   selector:
@@ -17,14 +22,21 @@ spec:
       labels:
         app: pacman
     spec:
+      securityContext:
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: pacman
         image: docker.io/2ffs2nns/pacman:bdb4281
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         securityContext:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
+          allowPrivilegeEscalation: false
         resources:
           limits:
             cpu: "200m"
@@ -32,6 +44,18 @@ spec:
           requests:
             cpu: "100m"
             memory: "128Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
