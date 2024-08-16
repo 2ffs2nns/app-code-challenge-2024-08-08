@@ -29,7 +29,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: pacman
-        image: docker.io/2ffs2nns/pacman:bdb4281
+        image: docker.io/2ffs2nns/pacman:9391c04
         imagePullPolicy: Always
         ports:
         - containerPort: 80
