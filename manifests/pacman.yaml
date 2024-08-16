@@ -5,6 +5,8 @@ metadata:
   namespace: pacman
   labels:
     app: pacman
+  annotations:
+    ignore-check.kube-linter.io/no-anti-affinity: "not worrying about nodes/replica placement atm"
 spec:
   replicas: 3
   selector:
@@ -20,6 +22,16 @@ spec:
         image: docker.io/2ffs2nns/pacman:bdb4281
         ports:
         - containerPort: 80
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+        resources:
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
 ---
 apiVersion: v1
 kind: Service
