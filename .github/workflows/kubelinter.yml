@@ -1,0 +1,16 @@
+name: Check Kubernetes YAMLs with kube-linter
+
+on: [pull_request]
+permissions: read-all
+
+jobs:
+  kube-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan yaml files with kube-linter
+        uses: stackrox/kube-linter-action@v1.0.4
+        id: kube-linter-action-scan
+        with:
+          directory: manifests
