@@ -14,3 +14,4 @@ jobs:
         id: kube-linter-action-scan
         with:
           directory: manifests
+          config: manifests/.kube-linter.yml
